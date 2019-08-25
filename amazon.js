@@ -18,13 +18,38 @@ const PORT=7777;
 
 // Lets start our server
 app.listen('./', function () {
-    //Callback triggered when server is successfully listening. Hurray!
-    console.log("Example app listening on port " + PORT);
 });
 
 // Slackへの返信
 app.post('/', function(req, res) {
     var txt = req.body.text;
-    //console.log(txt);
-    res.send('https://www.amazon.co.jp/s/ref=nb_sb_noss_2?__mk_ja_JP=カタカナ&url=search-alias%3Daps&field-keywords=' + txt);
+    const url = 'https://www.amazon.co.jp/s/ref=nb_sb_noss_2?__mk_ja_JP=カタカナ&url=search-alias%3Daps&field-keywords=' + txt;
+    const attachments = [
+        {
+            "fallback": "結果",
+            "pretext": "検索結果です",
+            "color": "#F000000",
+            "fields": [
+                {
+                    "title": "amazon",
+                    "value": "Result",
+                    "text": url
+                }
+            ]
+        }
+    ]
+
+    const options = {
+        uri: response_url,
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        attachments: attachments
+    }
+
+    res.post(options)
+        .catch((error) => {
+
+        }
 });
